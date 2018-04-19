@@ -23,7 +23,10 @@ $(document).ready(function(){
           col.append(card)
           $(".comment-container").append(col)
         })
-        
+        return
+      })
+      .then(function(){
+        $('#comments-modal').modal('open')
       })
       .catch(function(err){
         console.log(err)
