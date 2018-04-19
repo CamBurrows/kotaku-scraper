@@ -12,18 +12,24 @@ $(document).ready(function(){
         url: queryurl,
       })
       .then(function(data){
+        console.log("comments data: " + data)
+        $(".comment-container").empty()
+        
         data.comment.forEach(function(comment){
           const nickname = comment.nickname
           const time = comment.timestamp
           const body = comment.body
+          console.log("nickname: " + nickname)
+          console.log("time: " + time)
+          console.log("body: " + body)
 
-          let col = $("<div class='col m4>'")
-          let card = $("<div class='card-panel'")
-          card.append($("<h4>" + nickname + "</h4><h5>" + time + "</h5><span>" + body + "</span>"))
+          let col = $("<div class='col s3'>")
+          let card = $("<div class='card-panel'>")
+          card.append($("<h5>" + nickname + "</h5><span>" + time + "<span><p>" + body + "</p>"))
           col.append(card)
           $(".comment-container").append(col)
         })
-        return
+        
       })
       .then(function(){
         $('#comments-modal').modal('open')
@@ -33,9 +39,16 @@ $(document).ready(function(){
       })
     })
 
+    //click handler for passing hidden data-id attribute into modal form field
+    $(document).on("click",".comment-post", function(){
+      var dataId = $(this).attr("data-id");
+      $("#hidden-info").attr("data-id", dataId)
+      console.log("passed id along!")
+    })
+
     //click handler and ajax post for posting a comment on article
     $(document).on("click",".submit-button", function(){
-      let queryurl = "/comment/" + $(this).attr("data-id");
+      let queryurl = "/comment/" + $("#hidden-info").attr("data-id");
       console.log(queryurl);
       
       let nickname = $("#nickname").val().trim()

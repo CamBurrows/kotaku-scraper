@@ -20,7 +20,7 @@ var router = express.Router();
 //get route for all articles 
 router.get("/", function(req, res) {
     db.Article.find({})
-    .sort({createdAt:1})
+    .sort({createdAt:-1})
     .then(function(data){
         console.log(data)
         var object = {articles:data}
@@ -50,6 +50,7 @@ router.post("/comment/:id", function(req, res){
     })
     .then(function(updatedArticle) {
       // If the Library was updated successfully, send it back to the client
+      console.log ("article updated:" + updatedArticle)
       res.json(updatedArticle);
     })
     .catch(function(err) {
@@ -99,6 +100,9 @@ router.get("/scrape", function (req,res){
     })
     .then(function(){
         res.redirect("/");
+    })
+    .catch(function(err){
+        console.log(err)
     })
 })
 
