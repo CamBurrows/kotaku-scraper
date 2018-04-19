@@ -4,7 +4,7 @@ var mongoose = require("mongoose");
 var bodyParser = require("body-parser");
 var exphbs = require("express-handlebars")
 var cheerio = require("cheerio")
-var request = require("request")
+var request = require("request-promise")
 // Require all models
 var db = require("../models");
 
@@ -20,7 +20,7 @@ var router = express.Router();
 //get route for all articles 
 router.get("/", function(req, res) {
     db.Article.find({})
-    .sort({createdAt:-1})
+    .sort({createdAt:1})
     .then(function(data){
         console.log(data)
         var object = {articles:data}
@@ -54,7 +54,7 @@ router.post("/comment/:id", function(req, res){
     })
     .catch(function(err) {
       // If an error occurs, send it back to the client
-      res.json(err);
+      console.log(err);
     });
 })
 
@@ -91,7 +91,7 @@ router.get("/scrape", function (req,res){
             if (title && link && summary){
                 db.Article.create(newArticle)
                 .catch(function(err){
-                    res.json(err)
+                    console.log(err)
                 })
             }
         })
