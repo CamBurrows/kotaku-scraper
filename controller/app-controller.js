@@ -18,29 +18,35 @@ mongoose.connect(MONGODB_URI);
 var router = express.Router();
 
 //get route for all articles 
-//unsure if this data response is in object format???
 router.get("/", function(req, res) {
     db.Article.find({})
+    .sort({createdAt:-1})
     .then(function(data){
-        res.render("index", data)
+        console.log(data)
+        var object = {articles:data}
+        res.render("index", object)
     })
 })
 
 //get route for comments on article
 router.get("/comment/:id", function(req, res){
-    db.Article.find({_id: req.params.id})
+    db.Article.findById(req.params.id)
+    .populate("comment")
     .then(function(data){
         res.json(data)
     })
+    .catch(function(err) {
+        // If an error occurs, send it back to the client
+        res.json(err);
+      });
 })
 
 router.post("/comment/:id", function(req, res){
     db.Comment.create(req.body)
     .then(function(data) {
-      // If a Book was created successfully, find one library (there's only one) and push the new Book's _id to the Library's `books` array
       // { new: true } tells the query that we want it to return the updated Library -- it returns the original by default
       // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
-      return db.Article.findOneAndUpdate({_id: req.params.id}, { $push: { comment: data._id } }, { new: true });
+      return db.Article.findByIdAndUpdate(req.params.id, { $push: { comment: data._id } }, { new: true });
     })
     .then(function(updatedArticle) {
       // If the Library was updated successfully, send it back to the client
@@ -84,11 +90,16 @@ router.get("/scrape", function (req,res){
             // Save these results in an object that we'll push into the results array we defined earlier
             if (title && link && summary){
                 db.Article.create(newArticle)
+                .catch(function(err){
+                    res.json(err)
+                })
             }
         })
+   
     })
-
-    res.end();
+    .then(function(){
+        res.redirect("/");
+    })
 })
 
 module.exports = router

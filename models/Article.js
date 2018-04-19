@@ -15,7 +15,11 @@ var ArticleSchema = new Schema({
   comment: [{
     type: Schema.Types.ObjectId,
     ref: "Comment"
-  }]
+  }],
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 // This creates our model from the above schema, using mongoose's model method
