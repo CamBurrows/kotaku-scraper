@@ -1,5 +1,5 @@
 # kotaku-scraper
-This is an app that scrapes Kotaku, a popular Gaming Blog, for articles. The articles are permanently stored and users have the ability to comment on articles
+This is an app that scrapes Kotaku, a popular Gaming Blog, for articles. The article info is permanently stored and users have the ability to comment on articles in the UI.
 
 ## Instructions
 * Hit the update library buttton to scrape kotaku for new articles and update the page.
